@@ -27,6 +27,13 @@ server.get('/users', (req, res) => {
   }
 })
 
+server.get('/users/:userId', (req, res) => {
+  const { userId } = req.params
+  User.findById(userId)
+    .then((user) => res.json(user))
+    .catch((error) => res.json({ error: 'User not found' }))
+})
+
 server.post('/users', (req, res) => {
   const newUser = req.body
   User.create(newUser)
@@ -34,13 +41,12 @@ server.post('/users', (req, res) => {
     .catch((error) => console.log(error))
 })
 
-server.patch('/users/:id', (req, res) => {
+server.put('/users/:id', (req, res) => {
   const { id } = req.params
   const updatedUser = req.body
 
   User.findByIdAndUpdate({ _id: id }, updatedUser, {
     new: true,
-    overwrite: true,
   })
     .then((user) => res.json(user))
     .catch((error) => {
